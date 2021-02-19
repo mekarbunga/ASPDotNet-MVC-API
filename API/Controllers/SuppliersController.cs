@@ -1,7 +1,9 @@
 ﻿using API.Models;
 using API.Repositories;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -10,31 +12,18 @@ namespace API.Controllers
     public class SuppliersController : ApiController
     {
         SupplierRepository supplierRepository = new SupplierRepository();
-        VM_Message message = new VM_Message();
+        MessageFactory message = new MessageFactory();
+
         public IHttpActionResult Post(Supplier supplier)
         {
             int result = supplierRepository.Create(supplier);
-            if (result > 0) 
-            {
-                message.Message = "Data was succesfully created";
-                return Ok(message);
-            }
-            else 
-            {
-                return BadRequest("Data creation failed");
-            }
+            return message.Message(result);
         }
 
         public IHttpActionResult Put(Supplier supplier, int id)
         {
             int result = supplierRepository.Update(supplier, id);
-            if (result > 0)
-            {
-                message.Message = "Data was succesfully edited";
-                return Ok(message);
-            }
-            else
-                return BadRequest("Data update failed");
+            return message.Message(result);
         }
 
         public IHttpActionResult Get()
@@ -77,13 +66,7 @@ namespace API.Controllers
         public IHttpActionResult Delete(int id)
         {
             int result = supplierRepository.Delete(id);
-            if (result > 0)
-            {
-                message.Message = "Data was succesfully deleted";
-                return Ok(message);
-            }
-            else
-                return BadRequest("Data deletion failed");
+            return message.Message(result);
         }
     }
 }

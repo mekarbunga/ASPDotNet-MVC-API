@@ -36,8 +36,7 @@ namespace API.Repositories
         {
             var spName = "SP_RetrieveSupplier";
             var result = connection.Query<Supplier>(spName, commandType: CommandType.StoredProcedure);
-            int count = result.Count();
-            if (count > 0)
+            if (result.Count() > 0)
                 return result;
             else 
                 return (new List<Supplier> { new Supplier { SupplierId = 0, SupplierName = "" } });
@@ -48,7 +47,10 @@ namespace API.Repositories
             parameters.Add("@id", id);
             var spName = "SP_RetrieveByIdSupplier";
             var result =  await connection.QueryAsync<Supplier>(spName, parameters, commandType: CommandType.StoredProcedure);
-            return result;
+            if (result.Count() > 0)
+                return result;
+            else
+                return (new List<Supplier> { new Supplier { SupplierId = 0, SupplierName = "" } });
         }
 
         public int Update(Supplier supplier, int id)
